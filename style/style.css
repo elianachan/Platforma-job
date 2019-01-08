@@ -1,0 +1,105 @@
+/* STYLES */
+.noOverFlow{
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+.navbar-brand{
+    padding-left: 25px;
+    padding-right: 25px;
+    font-weight: 900;
+    color: white !important;
+    font-size: 1.4rem;
+}
+.nav-link{
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: 600;
+    color: white !important;
+    font-size: 1rem;
+}
+.dropdown-item{
+    padding-left: 20px;
+    padding-right: 20px;
+    font-weight: 600;
+    color: black;
+    font-size: 1rem;
+}
+.navbar{
+    background: #00c3ff !important;
+}
+.jumbotron{
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    background: rgba(0, 89, 255, 0.3);
+}
+.jumbotron .container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color:white;
+    font-weight: 900 !important;
+}
+.jumbotron .container .display-4{
+    font-weight: 900 !important;
+
+}
+.jumbotron .container .lead{
+    font-weight: 900 !important;
+
+}
+.jumbotron img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 150%;
+    filter: blur(5px);
+    z-index: -1;
+}
+.btn-custom{
+    font-weight: 900 !important;
+}
+.offerContainer{
+    height: 250px;
+    background: rgba(0, 89, 255);
+}
+.offerContainer .text{
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+}
+.card-offer{
+    margin-top: 20px;
+    background: #eee;
+    padding: 40px;
+    border-radius: 20px;
+}
+.card-offer .title{
+    font-weight: 900;
+    font-size: 23px;
+}
+.card-offer .shortDesc{
+    margin-top: 30px;
+    margin-bottom: 50px;
+    margin-left: 10px;
+    font-weight: 600;
+    max-width: 90%;
+}
+.card-offer .btn-offer{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+.card-offer .name{
+    margin-left: 10px;
+}
