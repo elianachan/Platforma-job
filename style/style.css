@@ -135,12 +135,12 @@
 }
 @media(max-width: 768px){
     .offerContainer .name{
-    position: absolute;
-    top: 100px;
-    left: 50px;
-    font-size: 1.3rem;
-    font-weight: 900;
-    color: white;
+        position: absolute;
+        top: 100px;
+        left: 50px;
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: white;
     }
 }
 .mt-50{
@@ -148,4 +148,14 @@
 }
 .btn-link{
     font-weight: 700;
+}
+form{
+    margin-top: 25px;
+    background: rgba(44, 44, 44, 0.39);
+    padding: 40px;
+    border-radius: 50px;
+    max-width: 400px;
+
+}
+.form-group{
 }
