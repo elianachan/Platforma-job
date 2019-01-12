@@ -1,3 +1,44 @@
+<?php
+
+    session_start();
+
+    require_once('includes/connect.php');
+
+     if(isset($_POST['save'])){
+        $email = $_POST['email'];
+        $password = md5($_POST['password']);
+       
+        $search = "SELECT * FROM `login` WHERE email='$email' AND password='$password'";
+        $result = mysqli_query($connection, $search);
+        $count = mysqli_num_rows($result);
+        $rows = $connection -> query($search);
+        if($rows ->num_rows > 0){
+            while($row = $rows -> fetch_assoc()){
+                 $_SESSION['id']  = $row['id'];
+                 echo $_SESSION['id'];
+            }
+        }
+
+        if($count == 1){
+            $_SESSION['email'] = $email;
+            $_SESSION['connected'] = true;
+        }
+        else{
+            $fsmg = "Invalide username/password";
+
+        }
+        
+    }
+     if(isset($_SESSION['connected']) == true){
+         $id = $_SESSION['id'];
+            header("Location: viewProfile.php?post=$id");
+            $smsg = "User already logged in";
+        }else{
+            $smsg = "You are not logged in";
+        }
+
+?>
+
 <html lang="en">
 
 <head>
@@ -52,16 +93,16 @@
         <div class="container">
             <h1 class="display-4">Log in - Platform Jobs</h1> 
             <center>
-            <form action="">
+            <form method="POST">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
                 </div>
-                <button type="submit" class="btn btn-primary">Log In</button>
+                <button type="submit" class="btn btn-primary" name="save">Log In</button>
             </form>
             </center>
         </div>

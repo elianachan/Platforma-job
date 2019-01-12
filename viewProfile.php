@@ -1,3 +1,19 @@
+<?php
+    session_start();
+    require_once('includes/connect.php');
+
+     if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
+         if(isset($_GET['post'])){
+            $email = $_SESSION['email'];
+            $id = mysqli_real_escape_string($connection, $_GET['post']);
+            $query = "SELECT * FROM login WHERE id='$id'";
+            $profileRows = $connection -> query($query);
+         }
+    }else{
+        $smsg = "You are not logged in";
+        header('Location: login.php');
+    }
+?>
 <html lang="en">
 
 <head>
@@ -50,13 +66,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="name">
-                   @Eliana Chan
+                    <?php 
+                     if($profileRows ->num_rows > 0){
+                            while($row = $profileRows -> fetch_assoc()){
+                    ?>@<?php echo $row['name']; ?>
+
+                   
                 </div>
                 <div class="avatar">
-                    <img src="assets/bgMain.jpg" alt="">
+                    <img src="data:image;base64,<?php echo $row['avatar']?>" alt="">
                 </div>
                 <div class="motto">
-                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, nam?"
+                   <?php echo $row['motto']; ?>
                 </div>
             </div>
         </div>
@@ -77,12 +98,7 @@
     
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf
-                    moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                    Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda
-                    shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
-                    proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim
-                    aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                   <?php echo $row['aboutme']; ?>
                 </div>
             </div>
         </div>
@@ -97,12 +113,7 @@
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                 <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf
-                    moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                    Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda
-                    shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
-                    proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim
-                    aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                   <?php echo $row['allskills']; ?>
                 </div>
             </div>
         </div>
@@ -117,15 +128,17 @@
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                 <div class="card-body">
-                  locatie
-                  mail
-                  telefon
+                  <?php echo $row['location']; ?>
+        
                 </div>
             </div>
         </div>
     </div>
 </div>
-      
+       <?php
+                            }
+                        }
+                    ?>
     <!-- Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"

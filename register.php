@@ -1,3 +1,60 @@
+<?php
+    session_start();
+
+    require_once('includes/connect.php');
+
+    if(isset($_POST['save']) ){
+        $email = $_POST['email'];
+        $password = md5($_POST['password']);
+        $name = $_POST['name'];
+        $motto = $_POST['motto'];
+        $mainSkill = $_POST['mainSkill'];
+        $location = $_POST['location'];
+        $aboutMe = $_POST['aboutMe'];
+        $allSkills = $_POST['allSkills'];
+
+        if(getimagesize($_FILES['image']['tmp_name']) == FALSE){
+            echo "Please select an avatar";
+        }else{
+            $image = addslashes($_FILES['image']['tmp_name']);
+            $image = file_get_contents($image);
+            $image = base64_encode($image);
+        }
+
+        $insert = "INSERT INTO login (email, password, name, motto, mainSkill, location, aboutme, allskills, avatar) VALUES ('$email', '$password', '$name', '$motto', '$mainSkill', '$location', '$aboutMe', '$allSkills', '$image')";
+        $result = mysqli_query($connection, $insert);
+
+        $search = "SELECT * FROM `login` WHERE email='$email' AND password='$password'";
+        $result = mysqli_query($connection, $search);
+        $count = mysqli_num_rows($result);
+        $rows = $connection -> query($search);
+        if($rows ->num_rows > 0){
+            while($row = $rows -> fetch_assoc()){
+                 $_SESSION['id']  = $row['id'];
+                 echo $_SESSION['id'];
+            }
+        }
+
+        if($count == 1){
+            $_SESSION['email'] = $email;
+            $_SESSION['connected'] = true;
+        }
+        else{
+            $fsmg = "Invalide username/password";
+
+        }
+
+        if($result){
+            $smsg = "User registration successfull";
+            $id = $_SESSION['id'];
+            header("Location: viewProfile.php?post=$id");
+        }else{
+            $fsmg = "User registration failed";
+        }
+
+    }
+?>
+
 <html lang="en">
 
 <head>
@@ -52,45 +109,47 @@
         <div class="container">
             <h1 class="display-4">Register - Platform Jobs</h1>
             <center>
-                <form action="">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            placeholder="Enter email">
+                            placeholder="Enter email" name="email">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputName1">Your Name</label>
-                        <input type="text" class="form-control" id="exampleInputName1" aria-describedby="emailHelp" placeholder="Enter name">
+                        <input type="text" class="form-control" id="exampleInputName1"  placeholder="Enter name" name="name">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputMotto1">Motto</label>
-                        <input type="text" class="form-control" id="exampleInputMotto1" aria-describedby="emailHelp" placeholder="Enter motto">
+                        <input type="text" class="form-control" id="exampleInputMotto1" placeholder="Enter motto" name="motto">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputMainSkill1">Main Skill</label>
-                        <input type="text" class="form-control" id="exampleInputMainSkull1" aria-describedby="emailHelp" placeholder="Enter main skill">
+                        <input type="text" class="form-control" id="exampleInputMainSkull1"  placeholder="Enter main skill" name="mainSkill">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputLocation1">Location</label>
-                        <input type="text" class="form-control" id="exampleInputLocation1" aria-describedby="emailHelp" placeholder="Enter location">
+                        <input type="text" class="form-control" id="exampleInputLocation1" placeholder="Enter location" name="location">
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">About me</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="aboutMe"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea2">All my skills</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+                        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" name="allSkills"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlFile1">Avatar</label>
-                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        <input type="file" class="form-control-file" id="exampleFormControlFile1" name="image">
                     </div>
-                    <button type="submit" class="btn btn-primary">Register account</button>
+                    <?php if(isset($smsg)){ ?> <div class="alert alert-succes" role="alert"> <?php echo $smsg; ?> </div> <?php } ?>
+                    <?php if(isset($fsmg)){ ?> <div class="alert alert-danger" role="alert"> <?php echo $fsmg; ?> </div> <?php } ?>
+                    <button type="submit" class="btn btn-primary" name="save">Register account</button>
                 </form>
             </center>
         </div>
