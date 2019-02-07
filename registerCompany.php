@@ -11,11 +11,8 @@ if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
         $email = $_POST['email'];
         $password = md5($_POST['password']);
         $name = $_POST['name'];
-        $motto = $_POST['motto'];
-        $mainSkill = $_POST['mainSkill'];
-        $location = $_POST['location'];
         $aboutMe = $_POST['aboutMe'];
-        $allSkills = $_POST['allSkills'];
+        $contact = $_POST['contact'];
 
         if(getimagesize($_FILES['image']['tmp_name']) == FALSE){
             echo "Please select an avatar";
@@ -25,7 +22,7 @@ if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
             $image = base64_encode($image);
         }
 
-        $insert = "INSERT INTO login (email, password, name, motto, mainSkill, location, aboutme, allskills, avatar) VALUES ('$email', '$password', '$name', '$motto', '$mainSkill', '$location', '$aboutMe', '$allSkills', '$image')";
+        $insert = "INSERT INTO company (email, password, name, description, contact) VALUES ('$email', '$password', '$name', '$aboutMe', '$contact')";
         $result = mysqli_query($connection, $insert);
 
         $search = "SELECT * FROM `login` WHERE email='$email' AND password='$password'";
@@ -45,15 +42,14 @@ if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
         }
         else{
             $fsmg = "Invalide username/password";
-
         }
 
         if($result){
-            $smsg = "User registration successfull";
+            $smsg = "Company registration successfull";
             $id = $_SESSION['id'];
-            header("Location: viewProfile.php?post=$id");
+            header("Location: loginCompany.php");
         }else{
-            $fsmg = "User registration failed";
+            $fsmg = "Company registration failed";
         }
 
     }
@@ -126,7 +122,7 @@ if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
            
                 <form method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
+                        <label for="exampleInputEmail1">Email Company</label>
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
                             placeholder="Enter email" name="email">
                     </div>
@@ -135,33 +131,19 @@ if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
                         <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputName1">Your Name</label>
+                        <label for="exampleInputName1">Company Name</label>
                         <input type="text" class="form-control" id="exampleInputName1"  placeholder="Enter name" name="name">
                     </div>
+                   
                     <div class="form-group">
-                        <label for="exampleInputMotto1">Motto</label>
-                        <input type="text" class="form-control" id="exampleInputMotto1" placeholder="Enter motto" name="motto">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputMainSkill1">Main Skill</label>
-                        <input type="text" class="form-control" id="exampleInputMainSkull1"  placeholder="Enter main skill" name="mainSkill">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputLocation1">Location</label>
-                        <input type="text" class="form-control" id="exampleInputLocation1" placeholder="Enter location" name="location">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">About me</label>
+                        <label for="exampleFormControlTextarea1">Descriere</label>
                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="aboutMe"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea2">All my skills</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" name="allSkills"></textarea>
+                     <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Contact</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="contact"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleFormControlFile1">Avatar</label>
-                        <input type="file" class="form-control-file" id="exampleFormControlFile1" name="image">
-                    </div>
+                 
                     <?php if(isset($smsg)){ ?> <div class="alert alert-succes" role="alert"> <?php echo $smsg; ?> </div> <?php } ?>
                     <?php if(isset($fsmg)){ ?> <div class="alert alert-danger" role="alert"> <?php echo $fsmg; ?> </div> <?php } ?>
                     <button type="submit" class="btn btn-primary" name="save">Register account</button>

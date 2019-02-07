@@ -1,15 +1,50 @@
 <?php
+
     session_start();
 
     require_once('includes/connect.php');
-
-    $search = "SELECT * FROM `login`";
-    $rows = $connection -> query($search);
-    if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
-         $email = $_SESSION['email'];
+if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){    
+            $email = $_SESSION['email'];
             $queryMy = "SELECT * FROM login WHERE email='$email'";
             $myProfile = $connection -> query($queryMy);
     }
+     if(isset($_POST['save'])){
+        $email = $_POST['email'];
+        $password = md5($_POST['password']);
+       
+        $search = "SELECT * FROM `company` WHERE email='$email' AND password='$password'";
+        $result = mysqli_query($connection, $search);
+        $count = mysqli_num_rows($result);
+        $rows = $connection -> query($search);
+        if($rows ->num_rows > 0){
+            while($row = $rows -> fetch_assoc()){
+                 $_SESSION['id']  = $row['id'];
+                 $_SESSION['nameCompany']  = $row['name'];
+
+                 echo $_SESSION['id'];
+            }
+        }
+
+        if($count == 1){
+            $_SESSION['email'] = $email;
+            $_SESSION['connected'] = true;
+        }
+        else{
+            $fsmg = "Invalide username/password";
+
+        }
+        
+    }
+     if(isset($_SESSION['connected']) == true){
+         $id = $_SESSION['id'];
+         $name = $_SESSION['nameCompany'];
+
+            header("Location: viewProfileCompany.php?post=$id&name=$name");
+            $smsg = "User already logged in";
+        }else{
+            $smsg = "You are not logged in";
+        }
+
 ?>
 
 <html lang="en">
@@ -26,7 +61,7 @@
     <title>Platform Job</title>
 </head>
 
-<body class="">
+<body class="noOverFlow">
     <!-- NAVIGATION BAR -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light ">
         <a class="navbar-brand" href="#">Platform Jobs</a>
@@ -37,7 +72,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-               <li class="nav-item active">
+                <li class="nav-item active">
                     <a class="nav-link textCap" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
@@ -49,7 +84,7 @@
                         User
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <?php 
+                         <?php 
                         if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
                              if($myProfile ->num_rows > 0){
                                  while($row = $myProfile -> fetch_assoc()){    
@@ -69,49 +104,27 @@
     </nav>
     <!-- ./NAVIGATION BAR -->
 
-    <div class="container-fluid offerContainer">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="text">
-                    All offers here 
+    <!-- JUMBOTRON -->
+    <div class="jumbotron jumbotron-fluid">
+        <img src="assets/bgMain.jpg" alt="">
+        <div class="container">
+            <h1 class="display-4">Log in - Platform Jobs</h1> 
+            <center>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+                </div>
+                <button type="submit" class="btn btn-primary" name="save">Log In</button>
+            </form>
+            </center>
         </div>
     </div>
-    
-    <div class="container">
-        <div class="row">
-            <?php
-             if($rows ->num_rows > 0){
-                while($row = $rows -> fetch_assoc()){
-                ?>
-                 <div class="col-md-12 card-offer">
-                    <div class="title">
-                        <?php echo $row['mainskill']; ?>
-                    </div>
-                    <div class="name">
-                        @<?php echo $row['name']; ?>
-                    </div>
-                    <div class="shortDesc">
-                        <?php 
-                        $body =  $row['aboutme'];
-                        echo substr($body, 0, 400); 
-                        echo "...";
-                        ?>                        
-                    </div>
-                    <a href="viewProfile.php?post=<?php echo $row['id'] ?>">
-                    <div class="btn btn-primary btn-offer">
-                        Show more
-                    </div>
-                    </a>
-                </div>
-                <?php
-                }
-             }
-            ?>
-           
-        </div>
-    </div>
+    <!-- ./JUMBOTRON -->
 
     <!-- Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

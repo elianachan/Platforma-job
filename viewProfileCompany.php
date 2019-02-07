@@ -6,18 +6,18 @@
          $email = $_SESSION['email'];
         $queryMy = "SELECT * FROM login WHERE email='$email'";
         $myProfile = $connection -> query($queryMy);
-        $IDUSER = $_SESSION['id'];
-        $queryNot = "SELECT * FROM notifications WHERE userID='$IDUSER'";
-        $notifications = $connection -> query($queryNot);
+         
         if(isset($_GET['post'])){
             
             $id = mysqli_real_escape_string($connection, $_GET['post']);
-            $query = "SELECT * FROM login WHERE id='$id'";
+            $nameCompany = mysqli_real_escape_string($connection, $_GET['name']);
+
+            $query = "SELECT * FROM company WHERE id='$id' AND name='$nameCompany'";
             $profileRows = $connection -> query($query);
          }
     }else{
         $smsg = "You are not logged in";
-        header('Location: login.php');
+        header('Location: loginCompany.php');
     }
 ?>
 <html lang="en">
@@ -63,23 +63,6 @@
                                  while($row = $myProfile -> fetch_assoc()){    
                         ?>
                         <a class="dropdown-item textCap" href="viewProfile.php?post=<?php echo $row['id']; ?>"> My Profile</a>
-                         <a class="nav-link dropdown-toggle textCap colorBlack" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                Notifications
-                            </a>
-
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                                   <?php  if($notifications ->num_rows > 0){
-                                            while($row2 = $notifications -> fetch_assoc()){ 
-                                                $idCom = $row2['companyID'];
-                                                $queryCom = "SELECT * FROM company WHERE id='$idCom'";
-                                                $company = $connection -> query($queryCom);
-                                                if($company ->num_rows > 0){
-                                                    while($row3 = $company -> fetch_assoc()){ 
-                                    ?>
-                                        <a class="dropdown-item textCap" href="#">Offer from company: <?php echo $row3['name'] ?> </a>
-                                    <?php } } } }?>
-                                 </div>
                         <a class="dropdown-item textCap" href="logout.php">Logout</a>
                         <?php  } } } else { ?>
                         <a class="dropdown-item textCap" href="login.php">Sign In</a>
@@ -89,7 +72,7 @@
 
                     </div>
                 </li>
-                 <li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle textCap" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         Company
@@ -144,12 +127,7 @@
 
                    
                 </div>
-                <div class="avatar">
-                    <img src="data:image;base64,<?php echo $row['avatar']?>" alt="">
-                </div>
-                <div class="motto">
-                   <?php echo $row['motto']; ?>
-                </div>
+               
             </div>
         </div>
     </div>
@@ -162,32 +140,18 @@
                 <h5 class="mb-0">
                     <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
                         aria-controls="collapseOne">
-                        About Me
+                        Company Description
                     </button>
                 </h5>
             </div>
     
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
-                   <?php echo $row['aboutme']; ?>
+                   <?php echo $row['description']; ?>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header" id="headingTwo">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
-                        aria-controls="collapseTwo">
-                        Skills
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                <div class="card-body">
-                   <?php echo $row['allskills']; ?>
-                </div>
-            </div>
-        </div>
+      
         <div class="card">
             <div class="card-header" id="headingThree">
                 <h5 class="mb-0">
@@ -199,7 +163,7 @@
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                 <div class="card-body">
-                  <?php echo $row['location']; ?>
+                  <?php echo $row['contact']; ?>
         
                 </div>
             </div>

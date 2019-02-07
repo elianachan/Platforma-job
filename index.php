@@ -1,3 +1,17 @@
+<?php
+
+    session_start();
+
+    require_once('includes/connect.php');
+    if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
+         $email = $_SESSION['email'];
+            $queryMy = "SELECT * FROM login WHERE email='$email'";
+            $myProfile = $connection -> query($queryMy);
+    }
+
+    ?>
+
+
 <html lang="en">
 
 <head>
@@ -24,20 +38,28 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link textCap" href="#">Home</a>
+                    <a class="nav-link textCap" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link textCap" href="offers.html">View Offers</a>
-                </li>   
+                    <a class="nav-link textCap" href="offers.php">View Offers</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle textCap" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         User
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item textCap" href="#">Sign In</a>
-                        <a class="dropdown-item textCap" href="#">Register</a>
-
+                         <?php 
+                        if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
+                             if($myProfile ->num_rows > 0){
+                                 while($row = $myProfile -> fetch_assoc()){    
+                        ?>
+                        <a class="dropdown-item textCap" href="viewProfile.php?post=<?php echo $row['id']; ?>"> My Profile</a>
+                        <a class="dropdown-item textCap" href="logout.php">Logout</a>
+                        <?php  } } } else { ?>
+                        <a class="dropdown-item textCap" href="login.php">Sign In</a>
+                        <a class="dropdown-item textCap" href="register.php">Register</a>
+                        <?php } ?>
                     </div>
                 </li>
 
@@ -54,7 +76,9 @@
             <p class="lead">
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Totam accusantium, rem dolores ducimus quae et. Molestiae enim, omnis architecto, excepturi at aliquam sapiente esse nemo, rerum corporis aspernatur error iste.
             </p>
-            <button class="btn btn-danger btn-custom">Add your knowledge</button>
+                        <a href="login.php">
+                            <button class="btn btn-danger btn-custom">Add your knowledge</button>
+                        </a>
         </div>
     </div>
     <!-- ./JUMBOTRON -->

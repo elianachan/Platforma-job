@@ -3,7 +3,11 @@
     session_start();
 
     require_once('includes/connect.php');
-
+if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){    
+            $email = $_SESSION['email'];
+            $queryMy = "SELECT * FROM login WHERE email='$email'";
+            $myProfile = $connection -> query($queryMy);
+    }
      if(isset($_POST['save'])){
         $email = $_POST['email'];
         $password = md5($_POST['password']);
@@ -65,10 +69,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link textCap" href="#">Home</a>
+                    <a class="nav-link textCap" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link textCap" href="offers.html">View Offers</a>
+                    <a class="nav-link textCap" href="offers.php">View Offers</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle textCap" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -76,8 +80,39 @@
                         User
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item textCap" href="#">Sign In</a>
-                        <a class="dropdown-item textCap" href="#">Register</a>
+                         <?php 
+                        if(isset($_SESSION['connected']) && $_SESSION['connected'] == true){
+                             if($myProfile ->num_rows > 0){
+                                 while($row = $myProfile -> fetch_assoc()){    
+                        ?>
+                        <a class="dropdown-item textCap" href="viewProfile.php?post=<?php echo $row['id']; ?>"> My Profile</a>
+                        <a class="dropdown-item textCap" href="logout.php">Logout</a>
+                        <?php  } } } else { ?>
+                        <a class="dropdown-item textCap" href="login.php">Sign In</a>
+                        <a class="dropdown-item textCap" href="register.php">Register</a>
+                        <?php } ?>
+
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle textCap" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Company
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <?php 
+                        if(isset($_SESSION['connected']) && $_SESSION['connected'] == true && $_SESSION['name']){
+                             if($myProfile ->num_rows > 0){
+                                 while($row = $myProfile -> fetch_assoc()){    
+                        ?>
+                        <a class="dropdown-item textCap" href="viewProfileCompany.php?post=<?php echo $row['id']; ?>&name=<?php echo $row['name']; ?>"> My Profile</a>
+                        
+                        <a class="dropdown-item textCap" href="logout.php">Logout</a>
+                        <?php  } } } else { ?>
+                        <a class="dropdown-item textCap" href="loginCompany.php">Sign In</a>
+                        <a class="dropdown-item textCap" href="registerCompany.php">Register</a>
+                        <?php } ?>
+                        
 
                     </div>
                 </li>

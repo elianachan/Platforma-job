@@ -10,6 +10,12 @@
             $queryMy = "SELECT * FROM login WHERE email='$email'";
             $myProfile = $connection -> query($queryMy);
     }
+    if(isset($_POST['addUser'])){
+        $idUser = $_POST['addUser'];
+        $idCompany = $_SESSION['id'];
+        $insert = "INSERT INTO notifications (userID, companyID) VALUES ('$idUser', '$idCompany')";
+        $result = mysqli_query($connection, $insert);
+    }
 ?>
 
 <html lang="en">
@@ -104,6 +110,11 @@
                         Show more
                     </div>
                     </a>
+                    <form method="post" class="disable">
+                        <button class="btn btn-danger btn-add " type="submit" name="addUser" value="<?php echo $row['id'] ?>">
+                            Add 
+                        </button>
+                    </form>
                 </div>
                 <?php
                 }
